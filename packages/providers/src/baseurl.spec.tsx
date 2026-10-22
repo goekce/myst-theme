@@ -7,6 +7,24 @@ describe('withBaseurl', () => {
     expect(withBaseurl('/docs/page', '/base')).toBe('/base/docs/page');
   });
 
+  it('should not produce a double slash when baseurl has a trailing slash', () => {
+    expect(withBaseurl('/about', '/base/')).toBe('/base/about');
+  });
+
+  it('should insert a separator when url has no leading slash', () => {
+    // e.g. an unresolved cross-reference falling back to a bare relative path
+    expect(withBaseurl('guides/docs', '/base')).toBe('/base/guides/docs');
+  });
+
+  it('should not double up the separator when both baseurl has a trailing slash and url lacks a leading one', () => {
+    expect(withBaseurl('guides/docs', '/base/')).toBe('/base/guides/docs');
+  });
+
+  it('should return baseurl unchanged when url is empty', () => {
+    expect(withBaseurl('', '/base')).toBe('/base');
+    expect(withBaseurl(undefined, '/base')).toBe('/base');
+  });
+
   it('should NOT prepend baseurl to external URLs', () => {
     expect(withBaseurl('http://example.com/page', '/base')).toBe('http://example.com/page');
     expect(withBaseurl('https://example.com/page', '/base')).toBe('https://example.com/page');

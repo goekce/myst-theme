@@ -8,11 +8,10 @@ import { MyST } from 'myst-to-react';
 import { ThemeButton } from './ThemeButton.js';
 import { Search } from './Search.js';
 import {
-  useBaseurl,
+  isExternalUrl,
   useNavLinkProvider,
   useNavOpen,
   useSiteManifest,
-  withBaseurl,
 } from '@myst-theme/providers';
 import { LoadingBar } from './Loading.js';
 import { HomeLink } from './HomeLink.js';
@@ -23,13 +22,13 @@ export const DEFAULT_NAV_HEIGHT = 60;
 
 export function NavItem({ item }: { item: SiteNavItem }) {
   const NavLink = useNavLinkProvider();
-  const baseurl = useBaseurl();
+  const config = useSiteManifest();
   if (!('children' in item)) {
     return (
       <div className="myst-top-nav-item relative inline-block mx-2 grow-0">
         <ExternalOrInternalLink
           nav
-          to={withBaseurl(item.url, baseurl) ?? ''}
+          to={item.url ?? ''}
           className={({ isActive }) =>
             classNames(
               'inline-flex items-center justify-center w-full mx-2 py-1 text-md font-medium text-myst-text hover:text-myst-active focus:outline-none focus-visible:ring-2 focus-visible:ring-myst-focus-ring focus-visible:ring-opacity-75',
@@ -63,11 +62,11 @@ export function NavItem({ item }: { item: SiteNavItem }) {
       >
         <Menu.Items className="myst-top-nav-dropdown-items absolute w-48 py-1 mt-2 origin-top-left bg-myst-bg rounded-sm shadow-lg left-4 ring-1 ring-myst-border focus:outline-none">
           {item.children?.map((action) => {
-            const url = withBaseurl(action.url, baseurl) || '';
+            const url = action.url ?? '';
             return (
               <Menu.Item key={action.url}>
                 {/* This is really ugly, BUT, the action needs to be defined HERE or the click away doesn't work for some reason */}
-                {action.url?.startsWith('http') ? (
+                {isExternalUrl(action.url, config?.options?.internal_domains) ? (
                   <a
                     href={url}
                     className="myst-top-nav-dropdown-item block px-4 py-2 text-sm text-myst-text hover:bg-myst-surface"
