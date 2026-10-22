@@ -25,8 +25,8 @@
   },
   "dependencies": {
     "@myst-theme/providers": "^1.4.1",
-    "mermaid": "^11.0.0",
-    "classnames": "^2.3.2"
+    "classnames": "^2.3.2",
+    "mermaid": "https://pkg.pr.new/mermaid-js/mermaid/mermaid@fd770ca"
   },
   "peerDependencies": {
     "@types/react": "^18.0 || ^19.0",
